@@ -1,0 +1,16 @@
+{
+    "quote": {
+        "column": {
+            "sharing_hash": true,
+            "shared_by": true
+        },
+        "constraint": {
+            "QUOTE_SHARING_HASH": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "shared_by": true
+        }
+    }
+}

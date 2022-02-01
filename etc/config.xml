@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <checkout>
+            <cart_sharing_options>
+                <cart_sharing_enabled>0</cart_sharing_enabled>
+                <cart_sharing_authentication>0</cart_sharing_authentication>
+                <cart_sharing_authentication_modal>0</cart_sharing_authentication_modal>
+                <cart_sharing_key_length>6</cart_sharing_key_length>
+            </cart_sharing_options>
+        </checkout>
+    </default>
+</config>

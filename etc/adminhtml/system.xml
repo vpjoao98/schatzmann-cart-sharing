@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="cart_sharing" translate="label" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Cart Sharing</label>
+            <tab>schatzmann</tab>
+            <resource>Schatzmann_Base::cart_sharing_config</resource>
+            <group id="cart_sharing_options" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Cart Sharing Options</label>
+                <comment>Add new sharing cart functionality in checkout/cart page.</comment>
+                <field id="cart_sharing_enabled" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable Cart Sharing</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="cart_sharing_authentication" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Validate Cart Sharing Key</label>
+                    <comment>Check 'Cart Sharing Key' input based on Customer's attributes of the same name.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="cart_sharing/cart_sharing_options/cart_sharing_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cart_sharing_modal" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show Cart Sharing as Popup</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="cart_sharing/cart_sharing_options/cart_sharing_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cart_sharing_key_length" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Cart Sharing Key Length</label>
+                    <comment>Number of characters that generated Cart Sharing Key will have (6-12).</comment>
+                    <validate>required-entry integer no-whitespace validate-digits-range digits-range-6-12</validate>
+                    <depends>
+                        <field id="cart_sharing/cart_sharing_options/cart_sharing_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cart_sharing_groups" translate="label comment" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable functionality for following Customer Groups</label>
+                    <comment>Customer Groups that can Share their Carts.</comment>
+                    <source_model>Schatzmann\CartSharing\Model\Config\Source\Customer\Group\Multiselect</source_model>
+                    <depends>
+                        <field id="cart_sharing/cart_sharing_options/cart_sharing_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

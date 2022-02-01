@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="quote">
+        <column xsi:type="varchar" name="sharing_hash" nullable="true" comment="Sharing Hash"/>
+        <column xsi:type="varchar" name="shared_by" nullable="true" comment="Shared By"/>
+        <constraint xsi:type="unique" referenceId="QUOTE_SHARING_HASH">
+            <column name="sharing_hash"/>
+        </constraint>
+    </table>
+    <table name="sales_order">
+        <column xsi:type="varchar" name="shared_by" nullable="true" comment="Shared By"/>
+    </table>
+</schema>

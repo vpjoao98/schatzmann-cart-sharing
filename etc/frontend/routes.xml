@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route frontName="shared" id="shared">
+            <module name="Schatzmann_CartSharing"/>
+        </route>
+    </router>
+</config>

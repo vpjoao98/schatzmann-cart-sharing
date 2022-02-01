@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::stores">
+                    <resource id="Schatzmann_Base::base_config">
+                        <resource id="Schatzmann_Base::cart_sharing_config" title="Cart Sharing" translate="title" sortOrder="10"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
