@@ -1,6 +1,8 @@
 {
     "name": "schatzmann/module-cart-sharing",
-    "description": "Schatzmann Cart Sharing",
+    "description": "Provides to customers the possibility to share their carts through a generated url",
+    "type": "magento2-module",
+    "license": "proprietary",
     "authors": [
         {
             "email": "vpjoao98@gmail.com",
@@ -8,12 +10,8 @@
         }
     ],
     "require": {
-        "schatzmann/module-base": "^1.0"
+        "schatzmann/module-base": ">=1.0.0"
     },
-    "type": "magento2-module",
-    "version": "1.0.0",
-    "license": "proprietary",
-    "minimum-stability": "dev",
     "autoload": {
         "files": [
             "registration.php"
