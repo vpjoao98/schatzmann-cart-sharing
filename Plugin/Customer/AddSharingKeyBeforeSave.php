@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
  * @author João Victor Pereira <vpjoao98@gmail.com>
  * @package CartSharing
  */
@@ -11,8 +11,6 @@ namespace Schatzmann\CartSharing\Plugin\Customer;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Schatzmann\CartSharing\Api\CartSharingInterface;
 use Schatzmann\CartSharing\Helper\Config\CartSharingHelper;
 

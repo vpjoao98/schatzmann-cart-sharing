@@ -1,0 +1,179 @@
+//
+// @copyright Copyright © 2022 - Schatzmann. All rights reserved.
+// @author João Victor Pereira <vpjoao98@gmail.com>
+// @package CartSharing
+//
+
+//
+//  Desktop & Mobile
+//  _____________________________________________
+& when (@media-common = true) {
+    .cart-sharing-wrapper {
+        .block {
+            &.cart-sharing {
+                .title {
+                    span {
+                        color: @link__color;
+                    }
+
+                    &:after {
+                        color: @color-gray52;
+                        content: @icon-down;
+                        font-family: 'luma-icons';
+                        font-size: 1.2rem;
+                        font-weight: normal;
+                        margin-left: 10px;
+                    }
+                }
+
+                &.active {
+                    .title {
+                        &:after {
+                            content: @icon-up;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .popup-cart-sharing {
+        #cart-sharing-form {
+            padding: 10px;
+        }
+    }
+
+    .cart-sharing-wrapper,
+    .popup-cart-sharing {
+        #cart-sharing-form {
+            .fieldset {
+                display: table;
+
+                .field {
+                    .label {
+                        display: none;
+                    }
+                }
+
+                > .field,
+                > .actions-toolbar,
+                > .copy-to-clipboard {
+                    display: table-cell;
+                }
+
+                .actions-toolbar {
+                    vertical-align: top;
+                    white-space: nowrap;
+
+                    .action {
+                        border-bottom-left-radius: 0;
+                        border-top-left-radius: 0;
+                        margin-left: -1px;
+                        min-width: 100px;
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+//
+//  Desktop
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .cart-sharing-wrapper {
+        .lib-layout-column(2, 1, @layout-column-checkout__width-main);
+        border: 0;
+        box-sizing: border-box;
+        padding-right: 4%;
+
+        .block {
+            &.cart-sharing {
+                .title {
+                    &:hover {
+                        cursor: pointer;
+                    }
+
+                    span {
+                        font-size: 1.6rem;
+                    }
+                }
+            }
+        }
+    }
+
+    .popup-cart-sharing {
+        .modal-inner-wrap {
+            max-width: 25%;
+
+            .modal-content {
+                #cart-sharing-form {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
+        }
+    }
+}
+
+//
+//  Mobile
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .cart-sharing-wrapper {
+        .block {
+            &.cart-sharing {
+                .title {
+                    padding: 10px 40px 10px 15px;
+                    position: relative;
+
+                    &:after {
+                        position: absolute;
+                        right: 20px;
+                        top: 10px;
+                        vertical-align: middle;
+                    }
+                }
+
+                .content {
+                    padding: 5px 15px 23px;
+                    position: relative;
+
+                    #cart-sharing-form {
+                        .fieldset {
+                            .field {
+                                input {
+                                    border-right: none;
+                                }
+                            }
+
+                            .actions-toolbar {
+                                width: 1%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .popup-cart-sharing {
+        .modal-inner-wrap {
+            #cart-sharing-form {
+                .fieldset {
+                    display: block;
+
+                    > .field,
+                    > .actions-toolbar,
+                    > .copy-to-clipboard {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}

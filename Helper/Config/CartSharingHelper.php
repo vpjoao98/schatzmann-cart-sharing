@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
  * @author João Victor Pereira <vpjoao98@gmail.com>
  * @package CartSharing
  */
@@ -35,7 +35,7 @@ class CartSharingHelper extends AbstractHelper
     /**
      * Configuration path for cart_sharing_modal field.
      */
-    const CART_SHARING_MODAL = 'cart_sharing/cart_sharing_options/cart_sharing_modal';
+    const CART_SHARING_POPUP = 'cart_sharing/cart_sharing_options/cart_sharing_modal';
 
     /**
      * Configuration path for cart_sharing_key_length field.
@@ -91,9 +91,9 @@ class CartSharingHelper extends AbstractHelper
     /**
      * @return bool
      */
-    public function isModalEnabled(): bool
+    public function isPopupEnabled(): bool
     {
-        return (bool) $this->getValue(self::CART_SHARING_MODAL);
+        return (bool) $this->getValue(self::CART_SHARING_POPUP);
     }
 
     /**

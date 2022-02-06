@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
  * @author João Victor Pereira <vpjoao98@gmail.com>
  * @package CartSharing
  */

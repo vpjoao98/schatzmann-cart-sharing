@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Schatzmann\CartSharing\Block\Customer\Account\SharedCarts" name="customer_account_shared_carts" template="Schatzmann_CartSharing::customer/account/shared-carts.phtml" before="customer_account_dashboard_top">
+                <arguments>
+                    <argument name="shared_count" xsi:type="number">5</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

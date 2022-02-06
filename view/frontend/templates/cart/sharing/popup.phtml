@@ -1,0 +1,31 @@
+<?php
+/**
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+
+use Magento\Framework\Escaper;
+use Schatzmann\CartSharing\Block\Checkout\Cart\Sharing\Popup;
+
+/**
+ * @var Popup $block
+ * @var Escaper $escaper
+ */
+?>
+<div class="block cart-sharing" id="block-cart-sharing">
+    <div class="title share-cart">
+        <span id="block-cart-sharing-heading"><?= $escaper->escapeHtmlAttr(__('Share Cart')) ?></span>
+    </div>
+</div>
+<div id="cartSharingPopup" data-bind="scope: 'cartSharingPopup'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <script type="text/x-magento-init">
+            {
+                "#cartSharingPopup": {
+                    "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+                }
+            }
+        </script>
+</div>
+

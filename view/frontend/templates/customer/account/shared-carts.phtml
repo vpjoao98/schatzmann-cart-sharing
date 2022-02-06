@@ -1,0 +1,106 @@
+<?php
+/**
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+
+use Magento\Framework\Escaper;
+use Schatzmann\CartSharing\Block\Customer\Account\SharedCarts;
+
+/**
+ * @var SharedCarts $block
+ * @var Escaper $escaper
+ */
+?>
+<div class="block block-dashboard-shared-carts">
+    <div class="block-title shared-carts">
+        <strong><?= $escaper->escapeHtml(__('Shared Carts')) ?></strong>
+        <?php if ($block->getSharedCount() && $block->getSharedCarts()): ?>
+            <a class="action view" href="<?= $block->getSharedCartsHistoryUrl() ?>">
+                <span><?= $escaper->escapeHtml(__('View All')) ?></span>
+            </a>
+        <?php endif; ?>
+        <?php if ($sharingKey = $block->getCustomerSharingKey()): ?>
+            <div class="cart-sharing-key-tooltip">
+                <label class="label" for="cart-sharing-key">
+                    <span><?= $escaper->escapeHtml(__('My Sharing Key')) ?></span>
+                </label>
+                <div class="control">
+                    <input type="hidden" disabled="disabled" id="cart-sharing-key" value="<?= $sharingKey ?>"/>
+                    <div data-bind="scope: 'copy-sharing-key'">
+                        <!-- ko template: getTemplate() --><!-- /ko -->
+                    </div>
+                    <script type="text/x-magento-init">
+                        {
+                            "*": {
+                                "Magento_Ui/js/core/app": {
+                                    "components": {
+                                        "copy-sharing-key": {
+                                            "component": "Schatzmann_Base/js/view/copy-to-clipboard",
+                                            "target": "#cart-sharing-key",
+                                            "placeholderText": "<?= /** @noEscape */ $escaper->escapeHtml(__('Copy Sharing Key')) ?>"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+    <div class="block-content">
+        <?php if ($sharedCarts = $block->getSharedCarts()): ?>
+        <div class="table-wrapper recent-shared-carts">
+            <table class="data table table-shared-carts recent" id="my-shared-carts-table">
+                <caption class="table-caption"><?= $escaper->escapeHtml(__('Recent Shared Carts')) ?></caption>
+                <thead>
+                <tr>
+                    <th scope="col" class="col id"><?= $escaper->escapeHtml(__('Cart #')) ?></th>
+                    <th scope="col" class="col date"><?= $escaper->escapeHtml(__('Date')) ?></th>
+                    <th scope="col" class="col total"><?= $escaper->escapeHtml(__('Total')) ?></th>
+                    <th scope="col" class="col items-count"><?= $escaper->escapeHtml(__('Items')) ?></th>
+                    <th scope="col" class="col sharing-url"><?= $escaper->escapeHtml(__('Sharing Url')) ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($sharedCarts as $key => $sharedCart): ?>
+                        <tr>
+                            <td data-th="<?= $escaper->escapeHtml(__('Cart #')) ?>" class="col id"><?= $sharedCart['id'] ?></td>
+                            <td data-th="<?= $escaper->escapeHtml(__('Date')) ?>" class="col date"><?= $sharedCart['date']; ?></td>
+                            <td data-th="<?= $escaper->escapeHtml(__('Total')) ?>" class="col total"><?= $sharedCart['total'] ?></td>
+                            <td data-th="<?= $escaper->escapeHtml(__('Items')) ?>" class="col items-count"><?= $sharedCart['items'] ?></td>
+                            <td class="col sharing-url">
+                                <div class="sharing-url-wrapper">
+                                    <input type="hidden" disabled="disabled" id="shared-cart-url-<?= $key ?>" value="<?= $sharedCart['sharing_url'] ?>"/>
+                                    <div data-bind="scope: 'copy-to-clipboard-<?= $key ?>'">
+                                        <!-- ko template: getTemplate() --><!-- /ko -->
+                                    </div>
+                                    <script type="text/x-magento-init">
+                                            {
+                                                "*": {
+                                                    "Magento_Ui/js/core/app": {
+                                                        "components": {
+                                                            "copy-to-clipboard-<?= $key ?>": {
+                                                                "component": "Schatzmann_Base/js/view/copy-to-clipboard",
+                                                                "target": "#shared-cart-url-<?= $key ?>",
+                                                                "placeholderText": "<?= /** @noEscape */ $escaper->escapeHtml(__('Copy Sharing Url')) ?>"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </script>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>
+                </tbody>
+            </table>
+        </div>
+        <?php else: ?>
+            <span class="empty-table"><?= $escaper->escapeHtml(__('You don\'t have any active shared cart.')) ?></span>
+        <?php endif; ?>
+    </div>
+</div>

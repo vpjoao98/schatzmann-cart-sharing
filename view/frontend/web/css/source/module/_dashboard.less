@@ -1,0 +1,95 @@
+//
+// @copyright Copyright © 2022 - Schatzmann. All rights reserved.
+// @author João Victor Pereira <vpjoao98@gmail.com>
+// @package CartSharing
+//
+
+//
+//  Desktop & Mobile
+//  _____________________________________________
+& when (@media-common = true) {
+    .customer-account-index,
+    .shared-customer-carts {
+        .block {
+            &.block-dashboard-shared-carts {
+                .block-title {
+                    display: flex;
+                    align-items: baseline;
+
+                    .cart-sharing-key-tooltip {
+                        margin-left: auto;
+
+                        .label {
+                            display: none;
+                        }
+
+                        .control {
+                            display: flex;
+
+                            button {
+                                margin-left: 15px;
+                                text-align: right;
+                            }
+                        }
+                    }
+                }
+
+                .block-content {
+                    > .table-wrapper {
+                        &.recent-shared-carts {
+                            > table {
+                                > tbody {
+                                    > tr {
+                                        > td {
+                                            vertical-align: middle;
+
+                                            &.sharing-url {
+                                                .sharing-url-wrapper {
+                                                    display: flex;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                button {
+                    &.copy {
+                        color: @link__color;
+                        background: none;
+                        border: none;
+                        font-weight: normal;
+                        font-size: 1.4rem;
+                        padding: 0;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+//
+//  Mobile
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .customer-account-index,
+    .shared-customer-carts {
+        .block {
+            &.block-dashboard-shared-carts {
+                .block-content {
+                    .table-wrapper {
+                        border-top: none;
+                    }
+                }
+            }
+        }
+    }
+}

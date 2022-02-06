@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="checkout.cart.container">
+            <block class="Schatzmann\CartSharing\Block\Checkout\Cart\Sharing" name="cart-sharing" as="cart-sharing" template="Schatzmann_CartSharing::cart/sharing.phtml" after="cart.discount" ifconfig="cart_sharing/cart_sharing_options/cart_sharing_enabled">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="cartSharingForm" xsi:type="array">
+                                <item name="component" xsi:type="string">Schatzmann_CartSharing/js/view/form/cart-sharing-form</item>
+                                <item name="displayArea" xsi:type="string">cartSharingForm</item>
+                                <item name="children" xsi:type="array">
+                                    <item name="messages" xsi:type="array">
+                                        <item name="component" xsi:type="string">Magento_Ui/js/view/messages</item>
+                                        <item name="displayArea" xsi:type="string">messages</item>
+                                    </item>
+                                    <item name="clipboard" xsi:type="array">
+                                        <item name="component" xsi:type="string">Schatzmann_Base/js/view/copy-to-clipboard</item>
+                                        <item name="displayArea" xsi:type="string">clipboard</item>
+                                        <item name="target" xsi:type="string">#cart-sharing-url</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+                <block class="Schatzmann\CartSharing\Block\Checkout\Cart\Sharing\Popup" name="cart-sharing-popup" as="cart-sharing-popup" template="Schatzmann_CartSharing::cart/sharing/popup.phtml">
+                    <arguments>
+                        <argument name="jsLayout" xsi:type="array">
+                            <item name="components" xsi:type="array">
+                                <item name="cartSharingPopup" xsi:type="array">
+                                    <item name="component" xsi:type="string">Schatzmann_CartSharing/js/view/cart-sharing-popup</item>
+                                    <item name="children" xsi:type="array">
+                                        <item name="cartSharingForm" xsi:type="array">
+                                            <item name="component" xsi:type="string">Schatzmann_CartSharing/js/view/form/cart-sharing-form</item>
+                                            <item name="displayArea" xsi:type="string">cartSharingForm</item>
+                                            <item name="children" xsi:type="array">
+                                                <item name="messages" xsi:type="array">
+                                                    <item name="component" xsi:type="string">Magento_Ui/js/view/messages</item>
+                                                    <item name="displayArea" xsi:type="string">messages</item>
+                                                </item>
+                                                <item name="clipboard" xsi:type="array">
+                                                    <item name="component" xsi:type="string">Schatzmann_Base/js/view/copy-to-clipboard</item>
+                                                    <item name="displayArea" xsi:type="string">clipboard</item>
+                                                    <item name="target" xsi:type="string">#cart-sharing-url</item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

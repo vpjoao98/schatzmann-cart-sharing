@@ -1,0 +1,40 @@
+<?php
+/**
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+
+use Magento\Framework\Escaper;
+use Schatzmann\CartSharing\Block\Checkout\Cart\Sharing;
+
+/**
+ * @var Sharing $block
+ * @var Escaper $escaper
+ */
+?>
+<?php if ($block->isEnabledForCustomer()) : ?>
+    <div class="cart-sharing-wrapper">
+        <?php if ($block->isPopupEnabled()): ?>
+            <?= $block->getChildHtml('cart-sharing-popup'); ?>
+        <?php else: ?>
+            <div class="block cart-sharing" id="block-cart-sharing" data-mage-init='{"collapsible":{"active": false, "openedState": "active", "saveState": false}}'>
+                <div class="title" data-role="title">
+                    <span id="block-cart-sharing-heading" role="heading" aria-level="2"><?= $escaper->escapeHtmlAttr(__('Share Cart')) ?></span>
+                </div>
+                <div class="content" data-role="content" aria-labelledby="block-cart-sharing-heading">
+                    <div id="cartSharingForm" data-bind="scope: 'cartSharingForm'">
+                        <!-- ko template: getTemplate() --><!-- /ko -->
+                        <script type="text/x-magento-init">
+                        {
+                            "#cartSharingForm": {
+                                "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+                            }
+                        }
+                    </script>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

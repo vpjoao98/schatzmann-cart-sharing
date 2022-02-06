@@ -1,0 +1,44 @@
+<!--
+/**
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
+ * @author João Victor Pereira <vpjoao98@gmail.com>
+ * @package CartSharing
+ */
+-->
+<div class="cart-sharing-form">
+    <form id="cart-sharing-form" data-bind="submit: shareCart" data-mage-init='{"validation":{}}'>
+        <fieldset class="fieldset">
+            <!-- ko if: !cartSharingUrl() -->
+                <div class="field cart-sharing-key required">
+                    <label class="label" for="cart-sharing-key"><!-- ko i18n: 'Cart Sharing Key' --><!-- /ko --></label>
+                    <div class="control">
+                        <input type="password" id="cart-sharing-key" class="input-text" data-validate="{required:true}" name="cart_sharing_key" data-bind="attr: { minlength: cartSharingKeyLength, maxlength: cartSharingKeyLength, placeholder: $t('Enter sharing key') }"/>
+                    </div>
+                </div>
+            <!-- /ko -->
+            <!-- ko if: cartSharingUrl() -->
+                <div class="field cart-sharing-url">
+                    <label class="label" for="cart-sharing-url"><!-- ko i18n: 'Cart Sharing Url' --><!-- /ko --></label>
+                    <div class="control">
+                        <input type="text" id="cart-sharing-url" class="input-text" disabled="disabled" data-bind="attr: {value: cartSharingUrl()}"/>
+                    </div>
+                </div>
+            <!-- /ko -->
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <!-- ko if: !cartSharingUrl() -->
+                        <button type="submit" class="action apply"><!-- ko i18n: 'Generate Url' --><!-- /ko --></button>
+                    <!-- /ko -->
+                    <!-- ko if: cartSharingUrl() -->
+                        <!-- ko foreach: getRegion('clipboard') -->
+                            <!-- ko template: getTemplate() --><!-- /ko -->
+                        <!--/ko-->
+                    <!-- /ko -->
+                </div>
+            </div>
+        </fieldset>
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+    </form>
+</div>

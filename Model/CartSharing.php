@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2021 - Schatzmann. All rights reserved.
+ * @copyright Copyright © 2022 - Schatzmann. All rights reserved.
  * @author João Victor Pereira <vpjoao98@gmail.com>
  * @package CartSharing
  */
@@ -9,14 +9,18 @@ declare(strict_types=1);
 
 namespace Schatzmann\CartSharing\Model;
 
+use Exception;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Math\Random as MathRandom;
-use Magento\Quote\Api\Data\CartInterface;
+use Magento\Framework\UrlInterface;
+use Magento\Quote\Api\CartManagementInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Schatzmann\CartSharing\Api\CartSharingInterface;
 use Schatzmann\CartSharing\Helper\Config\CartSharingHelper;
 use Schatzmann\CartSharing\Logger\CartSharingLogger;
@@ -28,24 +32,19 @@ use Schatzmann\CartSharing\Logger\CartSharingLogger;
 class CartSharing implements CartSharingInterface
 {
     /**
-     * Base Url path for shared carts.
+     * @var CheckoutSession
      */
-    const CART_SHARING_URL = 'shared/carts/?cart=';
-
-    /**
-     * Characters that will be used to create Cart Sharing Key
-     */
-    const CART_SHARING_KEY_CHARACTERS = MathRandom::CHARS_UPPERS . MathRandom::CHARS_DIGITS;
-
-    /**
-     * Number of characters that the cart sharing hash will have
-     */
-    const CART_SHARING_HASH_LENGTH = 12;
+    protected $checkoutSession;
 
     /**
      * @var CustomerRepositoryInterface
      */
     protected $customerRepository;
+
+    /**
+     * @var CustomerSession
+     */
+    protected $customerSession;
 
     /**
      * @var FilterBuilder
@@ -63,6 +62,21 @@ class CartSharing implements CartSharingInterface
     protected $mathRandom;
 
     /**
+     * @var CartManagementInterface
+     */
+    protected $cartManagement;
+
+    /**
+     * @var CartRepositoryInterface
+     */
+    protected $cartRepository;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * @var CartSharingHelper
      */
     protected $cartSharingHelper;
@@ -72,42 +86,88 @@ class CartSharing implements CartSharingInterface
      */
     protected $logger;
 
+    /**
+     * @param CheckoutSession $checkoutSession
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param CustomerSession $customerSession
+     * @param FilterBuilder $filterBuilder
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param MathRandom $mathRandom
+     * @param CartManagementInterface $cartManagement
+     * @param CartRepositoryInterface $cartRepository
+     * @param StoreManagerInterface $storeManager
+     * @param CartSharingHelper $cartSharingHelper
+     * @param CartSharingLogger $logger
+     */
     public function __construct(
+        CheckoutSession $checkoutSession,
         CustomerRepositoryInterface $customerRepository,
+        CustomerSession $customerSession,
         FilterBuilder $filterBuilder,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         MathRandom $mathRandom,
+        CartManagementInterface $cartManagement,
+        CartRepositoryInterface $cartRepository,
+        StoreManagerInterface $storeManager,
         CartSharingHelper $cartSharingHelper,
         CartSharingLogger $logger
     ) {
+        $this->checkoutSession = $checkoutSession;
         $this->customerRepository = $customerRepository;
+        $this->customerSession = $customerSession;
         $this->filterBuilder = $filterBuilder;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->mathRandom = $mathRandom;
+        $this->cartManagement = $cartManagement;
+        $this->cartRepository = $cartRepository;
+        $this->storeManager = $storeManager;
         $this->cartSharingHelper = $cartSharingHelper;
         $this->logger = $logger;
     }
 
-    public function setSharedCartData(CartInterface $cart)
+    /**
+     * @param string $sharingHash
+     * @return bool
+     */
+    public function getSharedCart(string $sharingHash): bool
     {
-        // TODO: Implement setSharedCartData() method.
-    }
+        if (!$sharedCart = current($this->filterEntityRepository('sharing_hash', '=', $sharingHash, $this->cartRepository))) {
+            return false;
+        }
 
-    public function getSharedCart(string $sharingHash): CartInterface
-    {
-        // TODO: Implement getSharedCart() method.
+        try {
+            if ($this->checkoutSession->getQuote()->isEmpty()) {
+                if ($customerId = $this->customerSession->getCustomerId()) {
+                    $newQuote = $this->cartManagement->createEmptyCartForCustomer($customerId);
+                } else {
+                    $newQuote =  $this->cartManagement->createEmptyCart();
+                }
+
+                $this->checkoutSession->setQuoteId($newQuote);
+            }
+
+            $this->checkoutSession->getQuote()->merge($sharedCart);
+            $this->cartRepository->save($this->checkoutSession->getQuote());
+            $this->cartRepository->delete($sharedCart);
+
+            return true;
+        } catch (Exception $e) {
+            $this->logger->error(__('Could not get the shared cart %1.', $sharingHash));
+        }
+
+        return false;
     }
 
     /**
      * @param CustomerInterface $customer
-     * @return null|string
+     * @return string|null
      */
     public function createSharingKey(CustomerInterface $customer): ?string
     {
         if ($customerId = $customer->getId()) {
             try {
                 $customer = $this->customerRepository->getById($customerId);
-            } catch (LocalizedException $e) {
+            } catch (Exception $e) {
                 $this->logger->error(__('Could not get customer with id %1.', $customer->getId()));
             }
         }
@@ -127,16 +187,52 @@ class CartSharing implements CartSharingInterface
                     $sharingKey = $temporaryKey;
                 }
             }
-        } catch (LocalizedException $e) {
+        } catch (Exception $e) {
             $this->logger->error(__('Could not generate Cart Sharing Key.' . $e->getMessage()));
         }
 
         return $sharingKey;
     }
 
-    public function createSharingUrl(string $cartSharingKey = null): string
+    /**
+     * @param string|null $cartSharingKey
+     * @return string|null
+     */
+    public function createSharingUrl(string $cartSharingKey = null): ?string
     {
-        // TODO: Implement createSharingUrl() method.
+        try {
+            $quote = $this->checkoutSession->getQuote();
+        } catch (Exception $e) {
+            $this->logger->error(__('Could not get quote from session.' . $e->getMessage()));
+            return null;
+        }
+
+        /**
+         * Look for customers that have the cartSharingKey assigned
+         */
+        if ($cartSharingKey && $this->cartSharingHelper->isAuthenticationEnabled()) {
+            $filteredCustomers = $this->filterEntityRepository('cart_sharing_key', '=', $cartSharingKey, $this->customerRepository);
+
+            if (count($filteredCustomers) !== 1) {
+                return null;
+            }
+
+            $quote->setData('shared_by', current($filteredCustomers)->getEmail());
+        }
+
+        try {
+            $sharingHash = $this->mathRandom->getRandomString(self::CART_SHARING_HASH_LENGTH);
+            $quote->setData('sharing_hash', $sharingHash);
+            $quote->setIsActive(false);
+            $this->cartRepository->save($quote);
+            $this->checkoutSession->clearStorage();
+
+            return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_DIRECT_LINK) . self::CART_SHARING_URL . $sharingHash;
+        } catch (Exception $e) {
+            $this->logger->error(__('Could not generate sharing url.' . $e->getMessage()));
+        }
+
+        return null;
     }
 
     /**
